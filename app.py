@@ -1,11 +1,11 @@
 """
-app.py — Global Trend Forecasting Pipeline (Readable Dashboard Edition)
-------------------------------------------------------------------------
-• Fetches up to 5 years of GDELT tone-weighted data
+app.py — Global Trend Forecasting Pipeline (Legend-Enhanced Edition)
+--------------------------------------------------------------------
+• Fetches 5 years of GDELT tone-weighted data
 • Aggregates weekly counts for Prophet forecasting
-• Uses >20 international & tech RSS feeds
+• Scrapes 25 + international & tech RSS feeds
 • Tracks geopolitics, energy, AI, cyber & emerging innovation
-• Produces readable high-res PNGs: top 8, dimmed full, and category subplots
+• Produces high-res PNGs: top 8, full-dimmed (legend below), category subplots
 """
 
 import os, re, traceback
@@ -65,9 +65,9 @@ ARTICLE_LIMIT = 40
 SAVE_DIR = "data"
 os.makedirs(SAVE_DIR, exist_ok=True)
 HISTORY_FILE = os.path.join(SAVE_DIR, "topic_history.csv")
-ACTIONS_LOG = os.path.join(SAVE_DIR, "actions.log")
-ERRORS_LOG  = os.path.join(SAVE_DIR, "errors.log")
-RUN_CHECK   = os.path.join(SAVE_DIR, "run_check.txt")
+ACTIONS_LOG  = os.path.join(SAVE_DIR, "actions.log")
+ERRORS_LOG   = os.path.join(SAVE_DIR, "errors.log")
+RUN_CHECK    = os.path.join(SAVE_DIR, "run_check.txt")
 
 # ---------- Logging ----------
 def log_action(msg):
@@ -269,12 +269,16 @@ def main():
             fig.tight_layout(pad=3)
             safe_save_plot(fig,os.path.join(SAVE_DIR,"topic_summary_top8.png"))
 
-            # 2. Dimmed overview
-            fig,ax=plt.subplots(figsize=(16,9))
+            # 2. Dimmed overview with legend below chart
+            fig,ax=plt.subplots(figsize=(18,10))
             smooth_df.plot(ax=ax,linewidth=1.0,alpha=0.5)
-            ax.set_title("All Topics Overview (Dimmed)")
-            ax.legend([],[],frameon=False)
-            fig.tight_layout(pad=3)
+            ax.set_title("All Topics Overview (Dimmed — Labels Below)")
+            ax.set_xlabel("Date")
+            ax.set_ylabel("Mentions (Smoothed)")
+            handles,labels=ax.get_legend_handles_labels()
+            ax.legend(handles,labels,loc="upper center",bbox_to_anchor=(0.5,-0.15),
+                      ncol=4,fontsize=8,frameon=False)
+            fig.tight_layout(pad=4)
             safe_save_plot(fig,os.path.join(SAVE_DIR,"topic_summary_all.png"))
 
             # 3. Category subplots
