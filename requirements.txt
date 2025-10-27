@@ -1,0 +1,9 @@
+feedparser
+newspaper3k
+pandas
+matplotlib
+prophet
+scikit-learn
+lxml_html_clean
+plotly
+requests
